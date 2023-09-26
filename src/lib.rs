@@ -106,8 +106,8 @@ pub enum TryFromAllocErrorKind {
 }
 
 pub struct TryFromAllocError<A: Allocator> {
-	kind: TryFromAllocErrorKind,
-	alloc: Alloc<A>,
+	pub kind: TryFromAllocErrorKind,
+	pub alloc: Alloc<A>,
 }
 
 type TryFromAllocResult<T, A> = Result<T, TryFromAllocError<A>>;
@@ -175,7 +175,7 @@ impl<'a, T, A: Allocator + Clone> From<&'a mut Vec<T, A>> for Alloc<A> {
 }
 
 impl<T, A: Allocator> From<Box<T, A>> for Alloc<A> {
-	fn from(mut x: Box<T, A>) -> Self {
+	fn from(x: Box<T, A>) -> Self {
 		let (ptr, alloc) = Box::into_raw_with_allocator(x);
 
 		unsafe { ptr::drop_in_place(ptr) }
